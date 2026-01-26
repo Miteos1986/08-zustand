@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
@@ -15,14 +15,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Note Hub",
   description: "Welcome to Note Hub aplication",
 
   openGraph: {
     title: "NoteHub",
-    description:
-      "NoteHub — зручний застосунок для створення, перегляду та організації нотаток.",
+    description: "NoteHub - Application for Notes",
     url: "http://localhost:3000",
     images: [
       {
@@ -44,7 +50,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable}`}
+      >
         <TanstackProvider>
           <Header />
           <div>

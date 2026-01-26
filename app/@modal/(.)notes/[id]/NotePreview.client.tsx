@@ -17,7 +17,7 @@ function NotePreview() {
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["notes", id],
+    queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
     enabled: !!id,
   });

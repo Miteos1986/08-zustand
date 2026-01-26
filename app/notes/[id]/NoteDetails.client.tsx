@@ -13,7 +13,7 @@ function NoteDetails() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["notes", id],
+    queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
     refetchOnMount: false,
   });

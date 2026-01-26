@@ -1,3 +1,5 @@
+import { Metadata } from "next";
+
 import {
   QueryClient,
   dehydrate,
@@ -12,12 +14,38 @@ interface NotePageProps {
   }>;
 }
 
+export const generateMetadata = async ({
+  params,
+}: NotePageProps): Promise<Metadata> => {
+  const { id } = await params;
+  const note = await fetchNoteById(id);
+
+  return {
+    title: note.title,
+    description: note.content,
+
+    openGraph: {
+      title: note.title,
+      description: note.content,
+      url: `http://localhost:3000/notes/${note.id}`,
+      images: [
+        {
+          url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
+          width: 1200,
+          height: 630,
+          alt: note.title,
+        },
+      ],
+    },
+  };
+};
+
 async function NotePage({ params }: NotePageProps) {
   const { id } = await params;
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["notes", id],
+    queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
   });
 
