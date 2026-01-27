@@ -11,6 +11,7 @@ import SearchBox from "@/components/SearchBox/SearchBox";
 import { Toaster } from "react-hot-toast";
 import Modal from "@/components/Modal/Modal";
 import NoteForm from "@/components/NoteForm/NoteForm";
+import Link from "next/link";
 
 interface NotesClientProps {
   tag: string;
@@ -20,10 +21,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
   const [page, setPage] = useState<number>(1);
   const [perPage] = useState<number>(12);
   const [search, setSearch] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const { data, isSuccess, isFetching, isError } = useQuery({
     queryKey: ["notes", page, search, tag],
@@ -49,18 +46,11 @@ export default function NotesClient({ tag }: NotesClientProps) {
     setPage(page);
   };
 
-  console.log({ data, tag, search, page });
-
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox search={search} onChange={debouncedSearch} />
         <Toaster position="top-right" />
-        {isModalOpen && (
-          <Modal onClose={closeModal}>
-            <NoteForm onClose={closeModal} />
-          </Modal>
-        )}
 
         {isSuccess && data.totalPages > 1 && (
           <Pagination
@@ -72,9 +62,9 @@ export default function NotesClient({ tag }: NotesClientProps) {
         {isFetching && !isError && (
           <span className={css.fetching}>Updating...</span>
         )}
-        <button onClick={openModal} className={css.button}>
+        <Link href="/notes/action/create" className={css.button}>
           Create note +
-        </button>
+        </Link>
       </header>
       {isSuccess && data.notes.length > 0 && <NoteList notes={data.notes} />}
     </div>
