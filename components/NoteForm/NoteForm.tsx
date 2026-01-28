@@ -3,8 +3,10 @@
 import { useMutation } from "@tanstack/react-query";
 import css from "./NoteForm.module.css";
 import { createNote } from "@/lib/api";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useNoteStore } from "@/lib/store/noteStore";
+import React from "react";
+//import toast from "react-hot-toast";
 //import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from "formik";
 //import * as Yup from "yup";
 
@@ -17,12 +19,26 @@ interface NoteFormValues {
 const NoteForm = () => {
   const router = useRouter();
 
+  const draft = useNoteStore((state) => state.draft);
+  const setDraft = useNoteStore((state) => state.setDraft);
+  const clearDraft = useNoteStore((state) => state.clearDraft);
+
   const { mutate, isPending } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
+      clearDraft();
       router.push("/notes/filter/all");
     },
   });
+
+  const handleChange = (
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = event.target;
+    setDraft({ [name]: value });
+  };
 
   const handleCancel = () => {
     router.push("/notes/filter/all");
@@ -38,6 +54,8 @@ const NoteForm = () => {
     mutate(payload);
   };
 
+  console.log(draft);
+
   return (
     <form action={handleSubmit} className={css.form}>
       <div className={css.formGroup}>
@@ -46,6 +64,8 @@ const NoteForm = () => {
           id="title"
           name="title"
           type="text"
+          onChange={handleChange}
+          defaultValue={draft.title}
           className={css.input}
           required
         />
@@ -56,12 +76,21 @@ const NoteForm = () => {
           id="content"
           name="content"
           rows={8}
+          onChange={handleChange}
+          defaultValue={draft.content}
           className={css.textarea}
         />
       </div>
       <div className={css.formGroup}>
         <label htmlFor="tag">Tag</label>
-        <select id="tag" name="tag" className={css.select} required>
+        <select
+          id="tag"
+          name="tag"
+          className={css.select}
+          onChange={handleChange}
+          defaultValue={draft.tag}
+          required
+        >
           <option value="Todo">Todo</option>
           <option value="Work">Work</option>
           <option value="Personal">Personal</option>
