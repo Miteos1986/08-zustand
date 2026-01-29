@@ -8,9 +8,6 @@ import Pagination from "@/components/Pagination/Pagination";
 import { useDebouncedCallback } from "use-debounce";
 import css from "./Notes.module.css";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import { Toaster } from "react-hot-toast";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
 import Link from "next/link";
 
 interface NotesClientProps {
@@ -50,8 +47,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox search={search} onChange={debouncedSearch} />
-        <Toaster position="top-right" />
-
         {isSuccess && data.totalPages > 1 && (
           <Pagination
             currentPage={page}
